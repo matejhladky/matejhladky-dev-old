@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matej Hladky</title>
+  <style>
+    h2 {
+      text-decoration: underline;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+      background-color: #f3f3f3;
+      padding: 8px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .author {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .title {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mateova (budoucí) Knihovna</h1>
+  <hr />
+  <h2 id="prioritized">Prioritní</h2>
+  <h2 id="other">Ostatní</h2>
+  <script type="module">
+    import { books } from './data/books.js';
+
+    const manualPriorityOrder = [
+      "Mathematical Biophysics: Physio-Mathematical Foundations of Biology",
+      "Computation: Finite and Infinite Machines",
+      "Principles of Neurodynamics",
+      "The Quest for Artificial Intelligence",
+      "Introduction to Linear Algebra",
+      "Perceptrons: An Introduction to Computational Geometry",
+      "Mathematical Proofs - A Transition to Advanced Mathematics",
+      "Introduction to the Theory of Computation",
+      "Never Finished",
+      "Elon Musk",
+      "Concrete Mathematics: A Foundation for Computer Science",
+      "Pattern Recognition and Machine Learning",
+      "Alex’s Adventure in Numberland",
+      "Obyčejný život",
+    ]
+  
+    // Function to create a styled list item for a book
+    function createBookListItem(book) {
+      const listItem = document.createElement('li');
+  
+      const authorSpan = document.createElement('span');
+      authorSpan.textContent = book['Author'];
+      authorSpan.className = 'author';
+  
+      const titleSpan = document.createElement('span');
+      titleSpan.textContent = `: ${book['Title (EN)']}`;
+      titleSpan.className = 'title';
+  
+      listItem.appendChild(authorSpan);
+      listItem.appendChild(titleSpan);
+  
+      return listItem;
+    }
+  
+    function sortBooks(a, b) {
+      const indexA = manualPriorityOrder.indexOf(a['Title (EN)']);
+      const indexB = manualPriorityOrder.indexOf(b['Title (EN)']);
+      
+      if (indexA > -1 || indexB > -1) {
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      }
+      return a.Author.localeCompare(b.Author);
+    }
+    // Sorting books by author
+    books.sort(sortBooks);
+  
+    // Selecting the sections in the HTML using the IDs
+    const prioritizedSection = document.getElementById('prioritized');
+    const otherSection = document.getElementById('other');
+  
+    // Creating unordered lists for each section
+    const prioritizedList = document.createElement('ul');
+    const otherList = document.createElement('ul');
+  
+    // Appending the lists to their respective sections
+    prioritizedSection.insertAdjacentElement('afterend', prioritizedList);
+    otherSection.insertAdjacentElement('afterend', otherList);
+  
+    // Distributing books into the appropriate lists
+    books.forEach(book => {
+      if (book.Prioritized === 'Yes') {
+        prioritizedList.appendChild(createBookListItem(book));
+      } else {
+        otherList.appendChild(createBookListItem(book));
+      }
+    });
+
+  </script>
+</body>
+</html>
