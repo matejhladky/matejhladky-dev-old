@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matej Hladky</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1 class="fs-title text-center">Matěj Hladký</h1>
+      <!-- <button
+          aria-controls="nav" 
+        >
+          =
+        </button> -->
+      <nav id="nav">
+        <ul role="list" class="nav-list">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="articles.html" class="nav-link active">Articles</a></li>
+          <li><a href="projects.html" class="nav-link">Projects</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="inner-content">
+        <h1 class="fs-primary-heading fw-bold">Articles</h1>
+        <p class="text-muted">I mainly write on <span><a href="https://medium.com/@matejhladky" target="_blank" class="text-underline">Medium!</a></span></p>
+
+        <!-- <div class="articles-category-list">
+          <ul role="list">
+            <li><a href="#">All Articles</a></li>
+            <li><a href="#">Deep Learning</a></li>
+            <li><a href="#">Philosophy</a></li>
+            <li><a href="#">Productivity</a></li>
+            <li><a href="#">Neuroscience</a></li>
+            <li><a href="#">Health</a></li>
+          </ul>
+        </div> -->
+
+        <div class="articles-previews">
+          <ul role="list" class="articles-previews-list">
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span class="text-muted fs-300">
+        © 2023 Matej Hladky
+      </span>
+    </div>
+  </footer>
+  <script type="module" src="/main.js"></script>
+  <script>
+    const username = 'matejhladky';
+    const RSSUrl = `https://medium.com/feed/@${username}`;
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const RSSConverter = `${proxyUrl}https://www.toptal.com/developers/feed2json/convert?url=${RSSUrl}`;
+
+    const getMediumData = async () => {
+      try {
+        const response = await fetch(RSSConverter);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log("Error fetching Medium articles: ", error);
+      }
+    };
+
+    const processArticleContent = (content) => {
+      let tmp = document.createElement('div');
+      tmp.innerHTML = content;
+
+      let firstImageSrc = null;
+      const images = tmp.getElementsByTagName('img');
+      if (images.length > 0) {
+        firstImageSrc = images[0].src;
+      }
+
+      Array.from(tmp.getElementsByTagName('figcaption')).forEach(figCaption => figCaption.replaceWith(" "));
+      const textContent = (tmp.textContent || tmp.innerText || "").substring(0, 400) + "...";
+
+      return { textContent, firstImageSrc };
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
+    const loadArticles = async () => {
+      const articlesPreviewsList = document.querySelector('.articles-previews-list');
+      try {
+        const articles = await getMediumData();
+  
+        if (articles && articles.items) {
+          for (let article of articles.items) {
+            console.log(article);
+            const articlePreview = document.createElement('li');
+            articlePreview.className = 'article-card';
+
+            const link = document.createElement('a');
+            link.href = article.url;
+
+            const title = document.createElement('h2') ;
+            title.textContent = article.title;
+            link.appendChild(title);
+
+            const pubDate = document.createElement('p');
+            pubDate.className = 'pub-date fs-300 text-muted';
+            pubDate.textContent = formatDate(article.date_published);
+            link.appendChild(pubDate);
+
+            const flexContainer = document.createElement('div');
+            flexContainer.className = 'flex-container';
+            link.appendChild(flexContainer);
+
+            const thumbnailContainer = document.createElement('div');
+            thumbnailContainer.className = 'thumbnail-container';
+            const thumbnail = document.createElement('img');
+            const contentPreview = document.createElement('p');
+            let processedContent = processArticleContent(article.content_html);
+            thumbnail.src = processedContent.firstImageSrc;
+            contentPreview.textContent = processedContent.textContent;
+            contentPreview.className = 'fs-400 text-muted'
+            flexContainer.appendChild(thumbnailContainer);
+            thumbnailContainer.appendChild(thumbnail);
+            flexContainer.appendChild(contentPreview);
+
+            articlePreview.appendChild(link);
+            articlesPreviewsList.appendChild(articlePreview);
+          }
+        }
+      } catch (error) {
+        console.log("Error loading articles: ", error);
+      }
+
+    };
+
+    loadArticles();
+
+
+  </script>
+
+  
+
+</body>
+
+</html>

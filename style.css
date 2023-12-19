@@ -2,8 +2,7 @@
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
+*::after { box-sizing: border-box;
 }
 
 * {
@@ -57,6 +56,16 @@ svg {
   }
 }
 
+/* Custom */
+*:focus {
+    outline: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+}
+
 /* ---------------------- CSS RESET (END) ---------------------- */
 
 @font-face {
@@ -72,6 +81,8 @@ svg {
 
   /* Instead of setting primary/secondary/... for foreground, background, ... just set a scale for these generic values */
   --clr-neutral-100: #ffffff; /* Lightest neutral color (background?) -- white  */
+  --clr-neutral-700: grey;
+  --clr-neutral-800: #424242;
   --clr-neutral-900: #000000;
 
   /* Just shades of that blue accent */
@@ -86,14 +97,15 @@ svg {
   --fw-regular: 400;
   --fw-bold: 700;
 
-  --fs-300: 0.5rem;
+  --fs-300: 0.875rem;
   --fs-400: 1rem;
-  --fs-500: 1.5rem;
-  --fs-600: 2rem;
+  --fs-500: 1.125rem;
+  --fs-600: 1.5rem;
+  --fs-700: 2rem;
 
-  --fs-title: var(--fs-600);
-  --fs-primary-heading: var(--fs-500);
-  --fs-secondary-heading: var(--fs-500);
+  --fs-title: var(--fs-700);
+  --fs-primary-heading: var(--fs-700);
+  --fs-secondary-heading: var(--fs-600);
   --fs-body: var(--fs-400);
   --fs-nav: var(--fs-300);
 }
@@ -102,6 +114,10 @@ svg {
 /* Utility */
 .text-neutral-900 {
   color: var(--clr-neutral-900);
+}
+
+.text-muted {
+  color: var(--clr-neutral-700);
 }
 
 .bg-neutral-100 {
@@ -145,7 +161,15 @@ svg {
 }
 
 .container {
-  --max-width: 960px;
+  --max-width: 1200px;
+  --padding: 1rem;
+
+  width: min(var(--max-width), 100% - var(--padding) * 2);
+  margin-inline: auto;
+}
+
+.inner-content {
+  --max-width: 1000px;
   --padding: 1rem;
 
   width: min(var(--max-width), 100% - var(--padding) * 2);
@@ -154,7 +178,16 @@ svg {
 
 .even-columns {
   display: grid;
-  gap: 1rem;
+  gap: 5rem;
+}
+
+@media (min-width: 50em) {
+    .even-columns {
+        /* grid-auto-flow: column;
+        grid-auto-columns: 1fr; */
+        grid-template-columns: 3fr 1fr;
+        gap: 8rem;
+    }
 }
 
 .text-center {
@@ -165,11 +198,15 @@ svg {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, var(--clr-accent-300) 50%);
 }
 
-@media (min-width: 50em) {
-  .even-columns {
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-  }
+.text-underline {
+  text-decoration: underline;
+}
+
+.card {
+  background: var(--clr-neutral-100);
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 3px 5px 11px 1px rgba(0,0,0,0.34); /* TODO: Can replace with var? */
 }
 
 /* General */
@@ -190,6 +227,7 @@ header {
   border-bottom: solid 1px var(--clr-neutral-900);
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
+  margin-bottom: 2.5rem;
 }
 
 .nav-list {
@@ -198,14 +236,326 @@ header {
   gap: 2rem; /*TODO: Change to utility? */
 }
 
-.nav-list a {
-  text-decoration: none;
-  color: var(--clr-neutral-900);
-}
-
 /* TODO: Redudant, copies text-highlight utility */
 .nav-list .active {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, var(--clr-accent-300) 50%);
 }
 
+.nav-link {
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  display: block;
+  position: relative; /* Required for pseudo-element */
+  overflow: hidden; /* Hide the background gradient */
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, var(--clr-accent-300) 50%);
+  transition: left 0.3s; /* Transition the left position */
+  z-index: -1;
+}
+
+.nav-link:hover::before {
+  left: 0; /* Move the highlight to the right on hover */
+}
+
+footer {
+  margin-top: 5rem;
+}
+
+footer .container {
+  display: flex;
+  justify-content: center;
+  align-items: bottom;
+}
+
+/* -- INDEX -- */
+
+.latest-component {
+  margin-bottom: 2.5rem;
+}
+
+.latest-component-title {
+  margin-bottom: 0.25rem;
+}
+
+.latest-component-preview {
+    display: flex;
+    align-items: start;
+    margin-top: 1rem;
+}
+
+.latest-component-preview img {
+    width: 200px;
+    height: auto;
+    margin-right: 1rem;
+}
+
+.latest-component-preview p {
+
+    flex: 1;
+    margin: 0;
+    text-align: justify;
+}
+
+#card-intro {
+  margin-bottom: 1.5rem;
+}
+
+#card-intro h2 {
+  margin-bottom: 0.5rem;
+}
+
+#card-newsletter h3 {
+  margin-left: 2rem;
+}
+
+#card-newsletter h2 {
+  margin-left: 2rem;
+  padding-top: 1rem;
+}
+
+/* #card-newsletter form {
+  margin-top: 0.5rem;
+}
+
+#card-newsletter .cta {
+  display: flex;
+}
+
+#card-newsletter input {
+  border: 1px solid var(--clr-neutral-900);
+  padding: 10px;
+  margin: 0;
+  height: 40px;
+  border-right: none;
+}
+
+#card-newsletter button {
+  color: var(--clr-neutral-100);
+  background-color: var(--clr-neutral-900);
+  border: 1px solid var(--clr-neutral-900);
+  padding: 0px 10px;
+  cursor: pointer;
+  height: 40px;
+} */
+
+#card-newsletter iframe {
+  width: 350px;
+  height: 150px;
+}
+
+.embed-page {
+  background-color: red;
+  padding: 0;
+  margin: 0;
+}
+
+iframe html body.vsc-initialized div#entry div#main.main.typography.use-theme-bg div.embed-page {
+  background-color: red;
+  color: blue;
+  height: 100rem;
+}
+
+/* -- ARTICLES -- */
+
+.articles-category-list {
+  border-bottom: solid 1px var(--clr-neutral-700);
+  margin-top: 2rem;
+  padding-bottom: 0.3rem;
+}
+
+.articles-category-list ul {
+  display: flex;
+  justify-content: space-between;
+}
+
+.articles-category-list a {
+  padding: 1rem;
+}
+
+.articles-category-list a:hover {
+  text-decoration: underline;
+}
+
+/* TODO: Temporary */
+.articles-previews {
+  margin-top: 2rem;
+  font-size: 2rem;
+  color: var(--clr-neutral-700)
+}
+
+.article-card {
+  margin-bottom: 3rem;
+}
+
+.article-card h2 {
+  font-size: var(--fs-secondary-heading);
+  font-weight: var(--fw-bold);
+}
+
+.article-card .flex-container {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: .3rem;
+}
+
+
+.article-card .flex-container .thumbnail-container {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.article-card .flex-container .thumbnail-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--clr-neutral-900)
+}
+
+
+.article-card .flex-container p {
+  width: 75%;
+}
+
+@media only screen and (max-width: 600px) {
+  .article-card .flex-container .thumbnail-container {
+    display: none;
+  }
+
+  .article-card .flex-container p {
+    width: 100%;
+  }
+  
+}
+
+
+
+
+/* -- PROJECTS -- */
+
+.projects-previews {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 2rem;
+  color: var(--clr-neutral-700)
+}
+
+/* -- ABOUT -- */
+
+#about .skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 2rem;
+}
+
+#about .skill-badge {
+  flex: 0 1 30%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--clr-neutral-100);
+  padding: 0.7rem;
+  border-radius: 10rem;
+  box-shadow: 3px 5px 11px 1px rgba(0,0,0,0.34); /* TODO: Can replace with var? */ 
+  margin-bottom: 2rem;
+  font-weight: var(--fw-bold);
+}
+
+@media (max-width: 600px) {
+  .skill-badge {
+    flex-basis: 100%;
+  }
+}
+
+#about .skill-badge img {
+  width: 1.5rem;
+  height: auto;
+  margin-right: 0.6rem;
+}
+
+/* Contact Form */
+.contact-form {
+  width: 60%;
+  margin: auto;
+}
+
+.contact-form input[type=text], textarea {
+  width: 100%;
+  padding: 0.75rem; 
+  border: 1px solid var(--clr-neutral-700);
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.contact-form input[type=submit] {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+  cursor: pointer;
+  background-color: var(--clr-neutral-900);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+}
+
+/* TODO */
+.contact-form .form-error {
+  border: 1px solid red !important;
+}
+
+.contact-form input[type=submit]:hover {
+  background-color: var(--clr-neutral-800);
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  display: none;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.social-links-item {
+  border: none;
+  margin-right: 1.3rem
+}
+
+.social-links-item .icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--clr-neutral-700);
+}
+
+.social-links-item .icon svg:hover {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--clr-neutral-800);
+}
 
