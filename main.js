@@ -1,4 +1,7 @@
 import { app, analytics } from './firebase.js';
+import { getAllArticles, getLatestArticle } from './scripts/articles.js';
+
+sessionStorage.setItem('articles', JSON.stringify(getLatestArticle()));
 
 // const routes = {
 //     '/': {
